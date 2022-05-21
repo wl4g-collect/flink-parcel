@@ -14,9 +14,9 @@ CDH除了能够管理自生所提供的一些大数据相关服务外，还允�
 
 文件名称格式为三段，第一段是包名，第二段是版本号，第三段是运行平台。
 
-例如：FLINK-1.9.1-bin-scala_2.12-el7.parcel
+例如：flink-1.9.1-bin-scala_2.12-el7.parcel
 
-**包名**：FLINK
+**包名**：flink
 
 **版本号**：1.9.1-bin-scala_2.12
 
@@ -37,7 +37,7 @@ csd的jar包必须置于/opt/cloudera/csd/目录才可以在添加集群服务�
 
 ## flink-parcel制作过程
 
-以CDH5.14、FLINK1.9.1为例
+以CDH5.14、flink1.9.1为例
 
 (1)**下载制作包**
 
@@ -48,7 +48,7 @@ git clone https://github.com/pkeropen/flink-parcel.git
 
 
 ```
-#FLINK 下载地址
+#flink 下载地址
 FLINK_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.9.1/flink-1.9.1-bin-scala_2.12.tgz
 
 FLINK_MD5=6f744825b3ddf8408e9410cbd6b82107
@@ -71,56 +71,53 @@ CDH_MIN=6
 CDH_MAX=6
 ```
 
+(2) **生成 parcel 文件**  
 
-
-(2)**生成parcel文件**  
-
+```bash
+./build.sh parcel
 ```
-./build.sh  parcel
-```
- 
-(3)**生成csd文件** 
+
+(3) **生成 csd 文件**
 
 - on yarn 版本
 
-```
-./build.sh  csd_on_yarn
-```
-
-
-- standalone版本
-
-```
-./build.sh  csd_standalone
+```bash
+./build.sh csd_on_yarn
 ```
 
-## CDH 中安装flink服务
-此处假设你已经安装好CDH集群
+- standalone 版本
 
-(1) 将上面生成的parcel文件copy至 cloudera/parcel-repo子目录下  
+```bash
+./build.sh csd_standalone
+```
 
-(2) 将上述生成的jar文件copy至cloudera /parcel-repo子目录下  
+## CDH 中安装 flink 服务
 
-(3) 在CDH中添加flink的parcel包：　　
+此处假设你已经安装好 CDH 集群
 
-打开CDH管理界面->集群->检查parcel包->flink->分配->激活
+(1) 将上面生成的 parcel 文件 copy 至 cloudera/parcel-repo 子目录下  
 
-(4) 重启CDH服务后 ，点击CDH所管理的集群添加服务，在列表中找到flink，按提示添加启动并运行。
+(2) 将上述生成的 jar 文件 copy 至 cloudera /parcel-repo 子目录下  
+
+(3) 在 CDH 中添加 flink 的 parcel 包：　　
+
+打开 CDH 管理界面->集群->检查 parcel 包->flink->分配->激活
+
+(4) 重启 CDH 服务后 ，点击 CDH 所管理的集群添加服务，在列表中找到 flink，按提示添加启动并运行。
 
 ## 说明：
-(1) 在如果集群开启了安全，需要配置security.kerberos.login.keytab和security.kerberos.login.principal两个参数才能正正常启动。如未启动kerberos,则在CDH中添加FLINK服务时请清空这两个参数的内容
+(1) 在如果集群开启了安全，需要配置 security.kerberos.login.keytab 和 security.kerberos.login.principal 两个参数才能正正常启动。如未启动 kerberos,则在 CDH 中添加 flink 服务时请清空这两个参数的内容
 
-(2) 如果你计划将 Apache Flink 与 Apache Hadoop 一起使用（在 YARN 上运行 Flink ，连接到 HDFS ，连接到 HBase ，或使用一些基于 Hadoop 文件系统的 connector ），请选择包含匹配的 Hadoop 版本的下载包，且另外下載对应版本的 Hadoop 库，将官方指定 [Pre-bundled Hadoop 2.6.5](https://repo.maven.apache.org/maven2/org/apache/flink/flink-shaded-hadoop-2-uber/2.6.5-7.0/flink-shaded-hadoop-2-uber-2.6.5-7.0.jar) ,并且把下载后的 Hadoop 库放置 到 Flink 安装目录下的 lib 目录 包并设置 HADOOP_CLASSPATH 环境变量。   
-例如：export HADOOP_CLASSPATH=/opt/cloudera/parcels/FLINK/lib/flink/lib
+(2) 如果你计划将 Apache Flink 与 Apache Hadoop 一起使用（在 YARN 上运行 Flink ，连接到 HDFS ，连接到 HBase ，或使用一些基于 Hadoop 文件系统的 connector ），请选择包含匹配的 Hadoop 版本的下载包，且另外下載对应版本的 Hadoop 库，将官方指定 [Pre-bundled Hadoop 2.6.5](https://repo.maven.apache.org/maven2/org/apache/flink/flink-shaded-hadoop-2-uber/2.6.5-7.0/flink-shaded-hadoop-2-uber-2.6.5-7.0.jar) ,并且把下载后的 Hadoop 库放置 到 Flink 安装目录下的 lib 目录 包并设置 HADOOP_CLASSPATH 环境变量
+例如：export HADOOP_CLASSPATH=/opt/cloudera/parcels/flink/lib/flink/lib
 
-
-## 相关参考：　　
+## 相关参考
 
 [Cloudera Manager Extensions](https://github.com/cloudera/cm_csds)
 
 [csd参考模板](git@github.com:cloudera/cm_csds.git)
 
-[FLINK官方下载地址](https://archive.apache.org/dist/flink/)
+[flink官方下载地址](https://archive.apache.org/dist/flink/)
 
 [CDH添加第三方服务的方法](https://blog.csdn.net/tony_328427685/article/details/86514385)
 
