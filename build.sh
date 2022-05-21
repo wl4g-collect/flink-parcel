@@ -104,40 +104,40 @@ function build_flink_parcel() {
 }
 
 function build_flink_csd_on_yarn() {
-  JARNAME=${flink_service_name}_on_yarn-${FLINK_VERSION}.jar
-  if [ -f "$JARNAME" ]; then
+  local jarname=${flink_service_name}_on_yarn-${FLINK_VERSION}.jar
+  if [ -f "$jarname" ]; then
+    echo "WARN: Found csd_on_yarn jar that has been built prev: '$flink_parcel_file', Please remove it and re-build. or use sub command 'clean'"
     return
   fi
-  cd ${base_dir}/
-  rm -rf ${flink_csd_build_dir}
-  cp -rf ./flink-csd-on-yarn-src ${flink_csd_build_dir}
+  rm -rf ${flink_csd_build_dir}; mkdir -p ${flink_csd_build_dir}
+  cp -rf ${base_dir}/flink-csd-on-yarn-src/* ${flink_csd_build_dir}
   sed -i -e "s#%SERVICENAME%#$livy_service_name#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%VERSION%#$FLINK_VERSION#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%CDH_MIN%#$CDH_MIN#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%CDH_MAX%#$CDH_MAX#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${flink_csd_build_dir}/scripts/control.sh
-  java -jar ./cm_ext/validator/target/validator.jar -s ${flink_csd_build_dir}/descriptor/service.sdl -l "SPARK_ON_YARN SPARK2_ON_YARN"
-  jar -cvf ${build_dir}/$JARNAME -C ${flink_csd_build_dir} .
+  java -jar ${base_dir}/cm_ext/validator/target/validator.jar -s ${flink_csd_build_dir}/descriptor/service.sdl -l "SPARK_ON_YARN SPARK2_ON_YARN"
+  jar -cvf ${build_dir}/$jarname -C ${flink_csd_build_dir} .
   rm -rf ${flink_csd_build_dir}
 }
 
 function build_flink_csd_standalone() {
-  JARNAME=${flink_service_name}-${FLINK_VERSION}.jar
-  if [ -f "$JARNAME" ]; then
+  local jarname=${flink_service_name}-${FLINK_VERSION}.jar
+  if [ -f "$jarname" ]; then
+    echo "WARN: Found csd_on_standalone jar that has been built prev: '$flink_parcel_file', Please remove it and re-build. or use sub command 'clean'"
     return
   fi
-  cd ${base_dir}/
-  rm -rf ${flink_csd_build_dir}
-  cp -rf ./flink-csd-standalone-src ${flink_csd_build_dir}
+  rm -rf ${flink_csd_build_dir}; mkdir -p ${flink_csd_build_dir}
+  cp -rf ${base_dir}/flink-csd-standalone-src/* ${flink_csd_build_dir}
   sed -i -e "s#%VERSIONS%#$FLINK_VERSION#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%CDH_MIN%#$CDH_MIN#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%CDH_MAX%#$CDH_MAX#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%SERVICENAME%#$livy_service_name#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${flink_csd_build_dir}/descriptor/service.sdl
   sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${flink_csd_build_dir}/scripts/control.sh
-  java -jar cm_ext/validator/target/validator.jar -s ${flink_csd_build_dir}/descriptor/service.sdl -l "SPARK_ON_YARN SPARK2_ON_YARN"
-  jar -cvf ${build_dir}/$JARNAME -C ${flink_csd_build_dir} .
+  java -jar ${base_dir}/cm_ext/validator/target/validator.jar -s ${flink_csd_build_dir}/descriptor/service.sdl -l "SPARK_ON_YARN SPARK2_ON_YARN"
+  jar -cvf ${build_dir}/$jarname -C ${flink_csd_build_dir} .
   rm -rf ${flink_csd_build_dir}
 }
 
