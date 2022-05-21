@@ -92,6 +92,42 @@ CDH_MAX=6
 ./build.sh csd_standalone
 ```
 
+- 生成资产目录树(如)
+
+```txt
+tree -L 6 build
+
+build
+├── flink-1.11.2.jar
+├── flink_on_yarn-1.11.2.jar
+├── parcel-repo
+│   ├── flink-1.11.2-bin-scala_2.12-el7.parcel
+│   ├── flink-1.11.2-bin-scala_2.12-el7.parcel.sha
+│   └── manifest.json
+└── parcels
+    └── CDH-6.3.1-1.cdh6.3.1.p0.1653154753
+        └── flink-1.11.2-bin-scala_2.12
+            ├── lib
+            │   └── flink
+            │       ├── bin
+            │       ├── conf
+            │       ├── examples
+            │       ├── lib
+            │       ├── LICENSE
+            │       ├── licenses
+            │       ├── log
+            │       ├── NOTICE
+            │       ├── opt
+            │       ├── plugins
+            │       └── README.txt
+            └── meta
+                ├── flink_env.sh
+                ├── parcel.json
+                └── permissions.json
+
+15 directories, 11 files
+```
+
 ## 3. CDH 中安装 flink 服务
 
 此处假设你已经安装好 CDH 集群
