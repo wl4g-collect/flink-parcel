@@ -128,27 +128,30 @@ build
 15 directories, 11 files
 ```
 
-## 3. CDH 中安装 flink 服务
+## 3. 将 Flink 包集成到 CM
 
-### 3.1 假设你已经安装好 CDH 集群
+- 将上面生成的 flink-{version}_{extra-version}.parcel 文件上传至 `/opt/cloudera/parcel-repo` 子目录下
 
-- 将上面生成的 parcel 文件 copy 至 cloudera/parcel-repo 子目录下  
+- 将上述生成的 jar 文件上传至 `/opt/cloudera/csd` 子目录下
 
-- 将上述生成的 jar 文件 copy 至 cloudera /parcel-repo 子目录下  
+- 使 flink parcel 包生效：　　
 
-- 在 CDH 中添加 flink 的 parcel 包：　　
+  - 打开 CM 管理界面 -> 集群 -> 检查 parcel 包 -> flink-> 分配 -> 激活
 
-- 打开 CDH 管理界面->集群->检查 parcel 包->flink->分配->激活
+  - 重启 CM 服务后 ，点击 CDH 集群管理页面中的'添加服务'，在列表中找到 flink，按提示添加启动并运行。
 
-- 重启 CDH 服务后 ，点击 CDH 所管理的集群添加服务，在列表中找到 flink，按提示添加启动并运行。
+- 操作截图如下(事后)
 
-### 3.2 操作截图(事后)
-
-- ![cdh6-add-flink1.png](shots/cdh6-add-flink1.png)
-- ![cdh6-add-flink2.png](shots/cdh6-add-flink2.png)
-- ![cdh6-add-flink3.png](shots/cdh6-add-flink3.png)
-- ![cdh6-add-flink4.png](shots/cdh6-add-flink4.png)
-- ![cdh6-add-flink5.png](shots/cdh6-add-flink5.png)
+  - ![0.cdh6-add-flink.png](shots/0.cdh6-add-flink.png)
+  - ![1.cdh6-add-flink.png](shots/1.cdh6-add-flink.png)
+  - ![2.cdh6-add-flink.png](shots/2.cdh6-add-flink.png)
+  - ![3.cdh6-add-flink.png](shots/3.cdh6-add-flink.png)
+  - ![4.cdh6-add-flink.png](shots/4.cdh6-add-flink.png)
+  - ![5.cdh6-add-flink.png](shots/5.cdh6-add-flink.png)
+  - ![6.cdh6-add-flink.png](shots/6.cdh6-add-flink.png)
+  - ![7.cdh6-add-flink.png](shots/7.cdh6-add-flink.png)
+  - ![8.cdh6-add-flink.png](shots/8.cdh6-add-flink.png)
+  - ![9.cdh6-add-flink.png](shots/9.cdh6-add-flink.png)
 
 ## 4. 说明
 
