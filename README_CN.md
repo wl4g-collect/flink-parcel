@@ -130,7 +130,7 @@ build
 
 ## 3. CDH 中安装 flink 服务
 
-此处假设你已经安装好 CDH 集群
+### 3.1 假设你已经安装好 CDH 集群
 
 - 将上面生成的 parcel 文件 copy 至 cloudera/parcel-repo 子目录下  
 
@@ -141,6 +141,14 @@ build
 - 打开 CDH 管理界面->集群->检查 parcel 包->flink->分配->激活
 
 - 重启 CDH 服务后 ，点击 CDH 所管理的集群添加服务，在列表中找到 flink，按提示添加启动并运行。
+
+### 3.2 操作截图(事后)
+
+- ![cdh6-add-flink1.png](shots/cdh6-add-flink1.png)
+- ![cdh6-add-flink2.png](shots/cdh6-add-flink2.png)
+- ![cdh6-add-flink3.png](shots/cdh6-add-flink3.png)
+- ![cdh6-add-flink4.png](shots/cdh6-add-flink4.png)
+- ![cdh6-add-flink5.png](shots/cdh6-add-flink5.png)
 
 ## 4. 说明
 
@@ -153,8 +161,8 @@ build
 
 - [Cloudera Manager Extensions](https://github.com/cloudera/cm_csds)
 
-- [csd 参考模板](git@github.com:cloudera/cm_csds.git)
+- [Cloudera CSD 模板](https://github.com/cloudera/cm_csds)
 
-- [flink 官方下载地址](https://archive.apache.org/dist/flink/)
+- [Apache Flink 官方下载库](https://archive.apache.org/dist/flink/)
 
 - [CDH 添加第三方服务的方法](https://blog.csdn.net/tony_328427685/article/details/86514385)

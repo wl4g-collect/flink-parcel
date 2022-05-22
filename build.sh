@@ -24,13 +24,15 @@ flink_build_name="${flink_service_name_lower}-${FLINK_VERSION}-${EXTENS_VERSION}
 flink_unzip_dir="${build_dir}/${flink_build_name}"
 ## for example: flink-1.11.2-bin-scala_2.12
 flink_package_lower="$(basename $flink_archive_file .tgz)"
-## The CM install default parcel dir example is: /opt/clouera/parcel-repo/
+## The CDH install default parcel dir example is: /opt/clouera/parcel-repo/
 flink_parcel_dir="${build_dir}/parcel-repo"
-## The CM install default parcel path example is: /opt/clouera/parcel-repo/CDH-6.3.1-1.cdh6.3.1.p0.1470567-el7.parcel
+## The CDH install default parcel path example is: /opt/clouera/parcel-repo/CDH-6.3.1-1.cdh6.3.1.p0.1470567-el7.parcel
 flink_parcel_file="${flink_parcel_dir}/${flink_package_lower}-${OS_VERSION}.parcel"
-## The CM install default build libs parcels dir example is: /opt/cloudera/parcels/CDH-6.3.1-1.cdh6.3.1.p0.1470567/lib/spark/
-flink_build_parent_dir="${build_dir}/parcels/CDH-${CDH_MAX_FULL}-1.cdh${CDH_MAX_FULL}.p0.$(date '+%s')/${flink_build_name}"
-## The CM install default csd dir is: /opt/cloudera/csd
+flink_build_parent_dir="${build_dir}/.parcels"
+flink_build_tmp_dir="${flink_build_parent_dir}/${flink_build_name}"
+flink_install_default_dir="/opt/cloudera/parcels/${flink_build_name}"
+## The CDH install default libs parcels dir example is: /opt/cloudera/parcels/CDH-6.3.1-1.cdh6.3.1.p0.1470567/lib/spark/
+## The CDH install default csd dir is: /opt/cloudera/csd
 flink_csd_build_dir="${build_dir}/csd"
 
 function build_cm_ext() {
@@ -70,75 +72,82 @@ function build_flink_parcel() {
     echo "WARN: Found parcel package that has been built prev: '$flink_parcel_file', Please remove it and re-build. or use sub command 'clean'"
     return
   fi
-  if [ ! -d $flink_build_parent_dir ]; then
+  if [ ! -d $flink_build_tmp_dir ]; then
     get_flink
-    mkdir -p $flink_build_parent_dir/lib
-    mv ${flink_unzip_dir} ${flink_build_parent_dir}/lib/${flink_service_name_lower}
+    mkdir -p $flink_build_tmp_dir/lib
+    mv ${flink_unzip_dir} ${flink_build_tmp_dir}/lib/${flink_service_name_lower}
   fi
   # Make scripts into bin.
   chmod 755 ${base_dir}/flink-parcel-src/bin/flink*
-  local flink_build_dir=${flink_build_parent_dir}/lib/${flink_service_name_lower}
-  cp -r ${base_dir}/flink-parcel-src/bin/flink-master.sh $flink_build_dir/bin
-  cp -r ${base_dir}/flink-parcel-src/bin/flink-worker.sh $flink_build_dir/bin
-  cp -r ${base_dir}/flink-parcel-src/bin/flink-yarn.sh $flink_build_dir/bin
+  local bin_dir=${flink_build_tmp_dir}/lib/${flink_service_name_lower}/bin
+  cp -r ${base_dir}/flink-parcel-src/bin/flink-master.sh $bin_dir
+  cp -r ${base_dir}/flink-parcel-src/bin/flink-worker.sh $bin_dir
+  cp -r ${base_dir}/flink-parcel-src/bin/flink-yarn.sh $bin_dir
   # Make parcel meta config.
-  local flink_build_meta_dir=${flink_build_parent_dir}/meta
+  local flink_build_meta_dir=${flink_build_tmp_dir}/meta
   mkdir -p $flink_build_meta_dir
   cp -r ${base_dir}/flink-parcel-src/meta/* $flink_build_meta_dir/
-  sed -i -e "s#%flink_version%#$flink_build_parent_dir#g" $flink_build_meta_dir/flink_env.sh
+  sed -i -e "s#%flink_version%#$flink_install_default_dir#g" $flink_build_meta_dir/flink_env.sh
   sed -i -e "s#%VERSION%#$FLINK_VERSION#g" $flink_build_meta_dir/parcel.json
   sed -i -e "s#%EXTENS_VERSION%#$EXTENS_VERSION#g" $flink_build_meta_dir/parcel.json
   sed -i -e "s#%CDH_MAX_FULL%#$CDH_MAX_FULL#g" $flink_build_meta_dir/parcel.json
   sed -i -e "s#%CDH_MIN_FULL%#$CDH_MIN_FULL#g" $flink_build_meta_dir/parcel.json
   sed -i -e "s#%SERVICENAME%#$flink_service_name#g" $flink_build_meta_dir/parcel.json
   sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" $flink_build_meta_dir/parcel.json
-  java -jar cm_ext/validator/target/validator.jar -d ${flink_build_parent_dir}
+  java -jar cm_ext/validator/target/validator.jar -d ${flink_build_tmp_dir}
   # Make parcel file with build directory.
   mkdir -p $flink_parcel_dir
-  cd $flink_build_parent_dir/../
+  cd $flink_build_tmp_dir/../
   tar -zcvhf $flink_parcel_file $flink_build_name --owner=root --group=root
   java -jar ${base_dir}/cm_ext/validator/target/validator.jar -f $flink_parcel_file
   # Make manifest.json with parcel file.
   python ${base_dir}/cm_ext/make_manifest/make_manifest.py $flink_parcel_dir
   sha1sum $flink_parcel_file | awk '{print $1}' > ${flink_parcel_file}.sha
+  rm -rf $flink_build_parent_dir
 }
 
 function build_flink_csd_on_yarn() {
-  local jarname=${flink_service_name}_on_yarn-${FLINK_VERSION}.jar
+  local jarname=${build_dir}/${flink_service_name}_on_yarn-${FLINK_VERSION}.jar
   if [ -f "$jarname" ]; then
     echo "WARN: Found csd_on_yarn jar that has been built prev: '$flink_parcel_file', Please remove it and re-build. or use sub command 'clean'"
     return
   fi
-  rm -rf ${flink_csd_build_dir}; mkdir -p ${flink_csd_build_dir}
-  cp -rf ${base_dir}/flink-csd-on-yarn-src/* ${flink_csd_build_dir}
-  sed -i -e "s#%SERVICENAME%#$livy_service_name#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%VERSION%#$FLINK_VERSION#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%CDH_MIN%#$CDH_MIN#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%CDH_MAX%#$CDH_MAX#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${flink_csd_build_dir}/scripts/control.sh
-  java -jar ${base_dir}/cm_ext/validator/target/validator.jar -s ${flink_csd_build_dir}/descriptor/service.sdl -l "SPARK_ON_YARN SPARK2_ON_YARN"
-  jar -cvf ${build_dir}/$jarname -C ${flink_csd_build_dir} .
-  rm -rf ${flink_csd_build_dir}
+  rm -rf ${jarname}
+  local tmp_dir=${build_dir}/.tmp; mkdir -p ${tmp_dir}
+  cp -rf ${base_dir}/flink-csd-on-yarn-src/* ${tmp_dir}/
+  sed -i -e "s#%SERVICENAME%#$livy_service_name#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%VERSION%#$FLINK_VERSION#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%CDH_MIN%#$CDH_MIN#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%CDH_MAX%#$CDH_MAX#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${tmp_dir}/scripts/control.sh
+  java -jar ${base_dir}/cm_ext/validator/target/validator.jar -s ${tmp_dir}/descriptor/service.sdl -l "SPARK_ON_YARN SPARK2_ON_YARN"
+  jar -cvf ${jarname} -C ${tmp_dir} .
+  rm -rf ${tmp_dir}
+  mkdir -p ${flink_csd_build_dir}
+  mv ${jarname} ${flink_csd_build_dir}
 }
 
 function build_flink_csd_standalone() {
-  local jarname=${flink_service_name}-${FLINK_VERSION}.jar
+  local jarname=${build_dir}/${flink_service_name}_standalone-${FLINK_VERSION}.jar
   if [ -f "$jarname" ]; then
     echo "WARN: Found csd_on_standalone jar that has been built prev: '$flink_parcel_file', Please remove it and re-build. or use sub command 'clean'"
     return
   fi
-  rm -rf ${flink_csd_build_dir}; mkdir -p ${flink_csd_build_dir}
-  cp -rf ${base_dir}/flink-csd-standalone-src/* ${flink_csd_build_dir}
-  sed -i -e "s#%VERSIONS%#$FLINK_VERSION#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%CDH_MIN%#$CDH_MIN#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%CDH_MAX%#$CDH_MAX#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%SERVICENAME%#$livy_service_name#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${flink_csd_build_dir}/descriptor/service.sdl
-  sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${flink_csd_build_dir}/scripts/control.sh
-  java -jar ${base_dir}/cm_ext/validator/target/validator.jar -s ${flink_csd_build_dir}/descriptor/service.sdl -l "SPARK_ON_YARN SPARK2_ON_YARN"
-  jar -cvf ${build_dir}/$jarname -C ${flink_csd_build_dir} .
-  rm -rf ${flink_csd_build_dir}
+  rm -rf ${jarname}
+  local tmp_dir=${build_dir}/.tmp; mkdir -p ${tmp_dir}
+  cp -rf ${base_dir}/flink-csd-standalone-src/* ${tmp_dir}/
+  sed -i -e "s#%VERSIONS%#$FLINK_VERSION#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%CDH_MIN%#$CDH_MIN#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%CDH_MAX%#$CDH_MAX#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%SERVICENAME%#$livy_service_name#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${tmp_dir}/descriptor/service.sdl
+  sed -i -e "s#%SERVICENAMELOWER%#$flink_service_name_lower#g" ${tmp_dir}/scripts/control.sh
+  java -jar ${base_dir}/cm_ext/validator/target/validator.jar -s ${tmp_dir}/descriptor/service.sdl -l "SPARK_ON_YARN SPARK2_ON_YARN"
+  jar -cvf ${jarname} -C ${tmp_dir} .
+  rm -rf ${tmp_dir}
+  mkdir -p ${flink_csd_build_dir}
+  mv ${jarname} ${flink_csd_build_dir}
 }
 
 case $1 in

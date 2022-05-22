@@ -13,11 +13,11 @@ if [ ! -d "$TEMP_PATH" ];then
 fi
 
 #PARCELS_DIR=`cd $TEMP_PATH; pwd`
-if [ ! -d "/opt/cloudera/parcels/FLINK" ]; then
-       ln -sv /opt/cloudera/parcels/FLINK-* /opt/cloudera/parcels/FLINK
+if [ ! -d "/opt/cloudera/parcels/flink" ]; then
+       ln -sv /opt/cloudera/parcels/flink-* /opt/cloudera/parcels/flink
 fi
 
-FLINK_HOME=/opt/cloudera/parcels/FLINK/lib/flink
+FLINK_HOME=/opt/cloudera/parcels/flink/lib/flink
 #FLINK_HOME=$PARCELS_DIR/FLINK-1.8.0-BIN-SCALA_2.11/lib/flink
 #Determine if the configuration file directory exists
 FLINK_CONF_DIR=$CONF_DIR/flink-conf

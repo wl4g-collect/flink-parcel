@@ -4,7 +4,7 @@
     "version": "%VERSION%-%EXTENS_VERSION%",
     "depends": "CDH (>= %CDH_MIN_FULL%), CDH (<< %CDH_MAX_FULL%)",
     "setActiveSymlink": true,
-    "replaces": "FLINK",
+    "replaces": "flink",
     "scripts": {
         "defines": "flink_env.sh"
     },

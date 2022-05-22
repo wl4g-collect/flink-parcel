@@ -1,5 +1,5 @@
 {
-    "name": "FLINK",
+    "name": "FLINK_STANDALONE",
     "label": "Flink-Standalone",
     "description": "Apache Flink is a framework and distributed processing engine for stateful computations over unbounded and bounded data streams.",
     "version": "%VERSION%",
