@@ -169,3 +169,9 @@ build
 - [Apache Flink 官方下载库](https://archive.apache.org/dist/flink/)
 
 - [CDH 添加第三方服务的方法](https://blog.csdn.net/tony_328427685/article/details/86514385)
+
+## 6. FAQ
+
+### 6.1 若已集成 Flink parcel 后又想升级版本?
+
+- 需务必注意卸载旧 Flink parcel 的操作顺序：a. 首先在所有引用的集群中停止如 Flink yarn 服务；b. 从每个集群中删除 Flink yarn 角色；c. 再在 parcels 管理中停用 Flink parcel 激活；d. 再点击卸载 Flink parcel
