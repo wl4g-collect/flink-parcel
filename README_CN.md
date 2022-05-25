@@ -45,29 +45,30 @@ git clone https://github.com/wl4g-collect/flink-parcel-generator.git
 - 2.2 **修改配置文件**　flink-parcel.properties
 
 ```properties
-# FLINK download address.
-# FLINK_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.9.2/flink-1.9.2-bin-scala_2.11.tgz
+## FLINK download address.
+#FLINK_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.9.2/flink-1.9.2-bin-scala_2.11.tgz
 FLINK_URL=https://archive.apache.org/dist/flink/flink-1.14.4/flink-1.14.4-bin-scala_2.11.tgz
 
-#FLINK_MD5=0718a04fe0a641cc5f5368124a4c54a5
-FLINK_MD5=281b30f7a365fd619502ad4f79f4321d
+## Checksum
+FLINK_SHA512=923f2d08d58d91809940f7d458b797b7099ce566ed635c5456a0e36c3ba5b1a200dd595113ffcdd972304a691baf6222b48f2fe7807c9b6286ff60c930a1df5f
 
-# flink version
+## flink version
 #FLINK_VERSION=1.9.2
 FLINK_VERSION=1.14.4
 
-# extra version
-#EXTENS_VERSION=BIN-SCALA_2.11
-EXTENS_VERSION=BIN-SCALA_2.11
+## extra version
+## 注：到 flink-1.14.4 为止，还不支持 scala-2.12，启动 /opt/cloudera/parcels/flink-1.11.2-bin-scala_2.12/lib/flink/bin/start-scala-shell.sh 报错：Error: Could not find or load main class org.apache.flink.api.scala.FlinkShell
+#EXTENS_VERSION=bin-scala_2.12
+EXTENS_VERSION=bin-scala_2.11
 
-# OS version, e.g CentOS 7
-OS_VERSION=7
+## OS version, e.g CentOS 7
+OS_VERSION=el7
 
-# CDH full version
-CDH_MIN_FULL=5.2
-CDH_MAX_FULL=6.3
+## CDH full version
+CDH_MIN_FULL=5.2.0
+CDH_MAX_FULL=6.3.3
 
-# CDH Major version
+## CDH Major version
 CDH_MIN=5
 CDH_MAX=6
 ```
@@ -140,8 +141,10 @@ build
 
   - 重启 CM 服务后 ，点击 CDH 集群管理页面中的'添加服务'，在列表中找到 flink，按提示添加启动并运行。
 
-- 操作截图如下(事后)
+- 操作截图：
 
+  - ***注：*** **以下为示例截图，其中的版本 `flink-1.11.2_scala-2.12` 需替换为实际值（如：`flink-1.14.4_scala-2.11`）**
+</br></br></br>
   - ![0.cdh6-add-flink.png](shots/0.cdh6-add-flink.png)
   - ![1.cdh6-add-flink.png](shots/1.cdh6-add-flink.png)
   - ![2.cdh6-add-flink.png](shots/2.cdh6-add-flink.png)
@@ -172,6 +175,11 @@ build
 
 ## 6. FAQ
 
-### 6.1 若已集成 Flink parcel 后又想升级版本?
+### 6.1 若想在已集成 Flink parcel 基础上升级版本，如何操作?
 
-- 需务必注意卸载旧 Flink parcel 的操作顺序：a. 首先在所有引用的集群中停止如 Flink yarn 服务；b. 从每个集群中删除 Flink yarn 角色；c. 再在 parcels 管理中停用 Flink parcel 激活；d. 再点击卸载 Flink parcel
+需务必注意卸载旧 Flink parcel 的操作顺序：
+
+- a. 首先在所有引用的集群中停止如 Flink yarn 服务；
+- b. 从每个集群中删除 Flink yarn 角色；
+- c. 再在 parcels 管理中停用 Flink parcel 激活
+- d. 再点击卸载 Flink parcel
