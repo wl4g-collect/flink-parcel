@@ -16,11 +16,11 @@ CDH 除了能够管理自生所提供的一些大数据相关服务外，还允�
 
     - 文件名称格式为三段，第一段是包名，第二段是版本号，第三段是运行平台。
 
-    - 如：flink-1.11.2-bin-scala_2.12-el7.parcel
+    - 如：flink-1.14.4-bin-scala_2.11-el7.parcel
 
   - **包名**：flink
 
-  - **版本号**：1.11.2-bin-scala_2.12
+  - **版本号**：1.14.4-bin-scala_2.11
 
   - **运行环境**：el7
 
@@ -34,7 +34,7 @@ CDH 除了能够管理自生所提供的一些大数据相关服务外，还允�
 
 ## 2. flink parcel 包制作过程
 
-以 CDH5.14、flink1.11.2 为例
+以 CDH5.14、flink1.14.4 为例
 
 - 2.1 **下载制作包**
 
@@ -47,18 +47,18 @@ git clone https://github.com/wl4g-collect/flink-parcel-generator.git
 ```properties
 # FLINK download address.
 # FLINK_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.9.2/flink-1.9.2-bin-scala_2.11.tgz
-FLINK_URL=https://archive.apache.org/dist/flink/flink-1.11.2/flink-1.11.2-bin-scala_2.12.tgz
+FLINK_URL=https://archive.apache.org/dist/flink/flink-1.14.4/flink-1.14.4-bin-scala_2.11.tgz
 
 #FLINK_MD5=0718a04fe0a641cc5f5368124a4c54a5
 FLINK_MD5=281b30f7a365fd619502ad4f79f4321d
 
 # flink version
 #FLINK_VERSION=1.9.2
-FLINK_VERSION=1.11.2
+FLINK_VERSION=1.14.4
 
 # extra version
 #EXTENS_VERSION=BIN-SCALA_2.11
-EXTENS_VERSION=BIN-SCALA_2.12
+EXTENS_VERSION=BIN-SCALA_2.11
 
 # OS version, e.g CentOS 7
 OS_VERSION=7
@@ -98,15 +98,15 @@ CDH_MAX=6
 tree -L 6 build
 
 build
-├── flink-1.11.2.jar
-├── flink_on_yarn-1.11.2.jar
+├── flink-1.14.4.jar
+├── flink_on_yarn-1.14.4.jar
 ├── parcel-repo
-│   ├── flink-1.11.2-bin-scala_2.12-el7.parcel
-│   ├── flink-1.11.2-bin-scala_2.12-el7.parcel.sha
+│   ├── flink-1.14.4-bin-scala_2.11-el7.parcel
+│   ├── flink-1.14.4-bin-scala_2.11-el7.parcel.sha
 │   └── manifest.json
 └── parcels
     └── CDH-6.3.1-1.cdh6.3.1.p0.1653154753
-        └── flink-1.11.2-bin-scala_2.12
+        └── flink-1.14.4-bin-scala_2.11
             ├── lib
             │   └── flink
             │       ├── bin
