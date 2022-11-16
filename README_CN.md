@@ -187,6 +187,10 @@ build
 - c. 再在 parcels 管理中停用 Flink parcel 激活
 - d. 再点击卸载 Flink parcel
 
-###  6.2 从 ``flink-1.15.0` 开始依赖 `zookeeper-3.5.x`，而 `CDH 6.3.2` 为止仅支持 `zookeeper-3.4.x`
+###  6.2 由于从 `flink-1.15.0` 开始就依赖 `zookeeper-3.5.x`，而 `CDH 6.3.2` 为止仅支持 `zookeeper-3.4.x`，因此启动会报错
 
-- 如果又必须要使用 `flink-1.15.x+` 简单的解决方案可能是使用独立于 CDH 的外部 zookeeper(3.5.x)。或者降回 `flink-1.14.x`
+- 方案1：降回 `flink-1.14.x`
+
+- 方案2：使用独立于 CDH 的外部 zookeeper(3.5.x)。
+
+- 方案3：手动从 flink 源码构建 `flink-shaded-zookeeper-3.4.x.jar` 包
