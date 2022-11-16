@@ -16,11 +16,11 @@ CDH 除了能够管理自生所提供的一些大数据相关服务外，还允�
 
     - 文件名称格式为三段，第一段是包名，第二段是版本号，第三段是运行平台。
 
-    - 如：flink-1.14.4-bin-scala_2.11-el7.parcel
+    - 如：flink-1.15.2-bin-scala_2.12-el7.parcel
 
   - **包名**：flink
 
-  - **版本号**：1.14.4-bin-scala_2.11
+  - **版本号**：1.14.4-bin-scala_2.12
 
   - **运行环境**：el7
 
@@ -47,19 +47,22 @@ git clone https://github.com/wl4g-collect/flink-parcel-generator.git
 ```properties
 ## FLINK download address.
 #FLINK_URL=https://mirrors.tuna.tsinghua.edu.cn/apache/flink/flink-1.9.2/flink-1.9.2-bin-scala_2.11.tgz
-FLINK_URL=https://archive.apache.org/dist/flink/flink-1.14.4/flink-1.14.4-bin-scala_2.11.tgz
+#FLINK_URL=https://archive.apache.org/dist/flink/flink-1.14.4/flink-1.14.4-bin-scala_2.11.tgz
+FLINK_URL=https://archive.apache.org/dist/flink/flink-1.15.2/flink-1.15.2-bin-scala_2.12.tgz
 
 ## Checksum
-FLINK_SHA512=923f2d08d58d91809940f7d458b797b7099ce566ed635c5456a0e36c3ba5b1a200dd595113ffcdd972304a691baf6222b48f2fe7807c9b6286ff60c930a1df5f
+FLINK_SHA512=ad3eeb0470855d4cdb4f5c5f913845360979815b2c1771526991801db2f15ed49fec5cf8166a598e8c3e03c8dd24afb003c96877362c95e9bfba0bfd987cd849
 
 ## flink version
 #FLINK_VERSION=1.9.2
-FLINK_VERSION=1.14.4
+#FLINK_VERSION=1.14.4
+FLINK_VERSION=1.15.2
 
 ## extra version
 ## 注：到 flink-1.14.4 为止，还不支持 scala-2.12，启动 /opt/cloudera/parcels/flink-1.11.2-bin-scala_2.12/lib/flink/bin/start-scala-shell.sh 报错：Error: Could not find or load main class org.apache.flink.api.scala.FlinkShell
-#EXTENS_VERSION=bin-scala_2.12
-EXTENS_VERSION=bin-scala_2.11
+## 但从 flink-1.15.0 开始很多模块就只支持 scala-2.12
+#EXTENS_VERSION=bin-scala_2.11
+EXTENS_VERSION=bin-scala_2.12
 
 ## OS version, e.g CentOS 7
 OS_VERSION=el7
@@ -99,15 +102,15 @@ CDH_MAX=6
 tree -L 6 build
 
 build
-├── flink-1.14.4.jar
+├── flink-1.15.2.jar
 ├── flink_on_yarn-1.14.4.jar
 ├── parcel-repo
-│   ├── flink-1.14.4-bin-scala_2.11-el7.parcel
-│   ├── flink-1.14.4-bin-scala_2.11-el7.parcel.sha
+│   ├── flink-1.15.2-bin-scala_2.12-el7.parcel
+│   ├── flink-1.15.2-bin-scala_2.12-el7.parcel.sha
 │   └── manifest.json
 └── parcels
     └── CDH-6.3.1-1.cdh6.3.1.p0.1653154753
-        └── flink-1.14.4-bin-scala_2.11
+        └── flink-1.15.2-bin-scala_2.12
             ├── lib
             │   └── flink
             │       ├── bin
@@ -143,7 +146,7 @@ build
 
 - 操作截图：
 
-  - ***注：*** **以下为示例截图，其中的版本 `flink-1.11.2_scala-2.12` 需替换为实际值（如：`flink-1.14.4_scala-2.11`）**
+  - ***注：*** **以下为示例截图，其中的版本 `flink-1.11.2_scala-2.12` 需替换为实际值（如：`flink-1.15.2_scala-2.11`）**
 </br></br></br>
   - ![0.cdh6-add-flink.png](shots/0.cdh6-add-flink.png)
   - ![1.cdh6-add-flink.png](shots/1.cdh6-add-flink.png)
