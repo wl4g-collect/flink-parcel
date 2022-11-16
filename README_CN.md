@@ -186,3 +186,7 @@ build
 - b. 从每个集群中删除 Flink yarn 角色；
 - c. 再在 parcels 管理中停用 Flink parcel 激活
 - d. 再点击卸载 Flink parcel
+
+###  6.2 从 ``flink-1.15.0` 开始依赖 `zookeeper-3.5.x`，而 `CDH 6.3.2` 为止仅支持 `zookeeper-3.4.x`
+
+- 如果又必须要使用 `flink-1.15.x+` 简单的解决方案可能是使用独立于 CDH 的外部 zookeeper(3.5.x)。或者降回 `flink-1.14.x`
