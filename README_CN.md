@@ -193,4 +193,10 @@ build
 
 - 方案2：使用独立于 CDH 的外部 zookeeper(3.5.x)。
 
-- 方案3：手动从 flink 源码构建 `flink-shaded-zookeeper-3.4.x.jar` 包
+- 方案3：手动从 flink 源码构建 `flink-shaded-zookeeper-3.4.x.jar` 包，如：
+```bash
+git clone git@github.com/apache/flink.git
+git checkout release-1.15.2
+vim pom.xml # 修改 zookeeper 版本
+mvn clean install -B -DskipTests -Dfast -Pskip-webui-build
+```
