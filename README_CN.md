@@ -195,8 +195,14 @@ build
 
 - 方案3：手动从 flink 源码构建 `flink-shaded-zookeeper-3.4.x.jar` 包，如：
 ```bash
+curl -O 'https://archive.apache.org/dist/flink/flink-shaded-15.0/flink-shaded-15.0-src.tgz'
+tar -xf flink-shade* && cd flink-shade*
+vim flink-shaded-zookeeper-parent/pom.xml # 修改 zookeeper 版本为 3.4.14
+mvn clean install -B -DskipTests -Dfast -T4C
+
+cd ..
 git clone git@github.com/apache/flink.git
 git checkout release-1.15.2
-vim pom.xml # 修改 zookeeper 版本
-mvn clean install -B -DskipTests -Dfast -Pskip-webui-build
+vim pom.xml # 修改 zookeeper 版本为 3.4.14
+mvn clean install -B -DskipTests -Dfast -Pskip-webui-build -T4C
 ```
